@@ -1,41 +1,23 @@
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-public class AvicTests {
-
-    private WebDriver driver;
-    private WebDriverWait webDriverWait;
-    private Actions actions;
-
-    @BeforeTest
-    public void sysVariableSetUp() {
-        System.setProperty("webdriver.chrome.driver", "src\\main\\resources\\chromedriver.exe");
-    }
-
-    @BeforeMethod
-    public void setUp() {
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.get("https://avic.ua/");
-
-        actions = new Actions(driver);
-        webDriverWait = new WebDriverWait(driver, 10);
-    }
+public class AvicTests extends BaseTest {
 
     @Test
     public void testGoToNotebookSectionFromSidebar() {
-        WebElement sideBar = driver.findElement(By.xpath("//span[@class='sidebar-item']"));
+        getHomePage().clickSideBar()
+                .goToInnerCategory("noutbuki-i-aksessuaryi")
+                .goToProducts("noutbuki")
+                .clickProductWithFilter("xiaomi");
+
+        getNotebooks().getProdElementsDescText()
+                .forEach(element -> Assert.assertTrue(element.contains("Xiaomi")));
+
+
+        /*WebElement sideBar = driver.findElement(By.xpath("//span[@class='sidebar-item']"));
         sideBar.click();
 
         WebElement slider = driver.findElement(By.className("category-slider"));
@@ -59,12 +41,12 @@ public class AvicTests {
         List<WebElement> elementList = driver.findElements(By.xpath("//div[@class='prod-cart__descr']"));
         for (WebElement webElement : elementList) {
             Assert.assertTrue(webElement.getText().contains("Xiaomi"));
-        }
+        }*/
     }
 
     @Test
     public void testFilterBlock() {
-        WebElement sideBar = driver.findElement(By.xpath("//span[@class='sidebar-item']"));
+        /*WebElement sideBar = driver.findElement(By.xpath("//span[@class='sidebar-item']"));
         sideBar.click();
 
         WebElement slider = driver.findElement(By.className("category-slider"));
@@ -80,9 +62,17 @@ public class AvicTests {
         webDriverWait.until(ExpectedConditions.visibilityOf(item));
 
         actions.moveToElement(item)
-                .click().build().perform();
+                .click().build().perform();*/
 
-        List<WebElement> filterBlocks;
+        List<String> filterValues = List.of("dlya-biznesa", "tonkij-i-lyogkij");
+
+        getHomePage().clickSideBar()
+                .goToInnerCategory("noutbuki-i-aksessuaryi")
+                .clickInnerCategoryItem("noutbuki");
+
+        getNotebooks().clickFilterBlocks(filterValues);
+
+        /*List<WebElement> filterBlocks;
         List<String> filterValues = List.of("dlya-biznesa", "tonkij-i-lyogkij");
 
         for (String value : filterValues) {
@@ -103,15 +93,15 @@ public class AvicTests {
             JavascriptExecutor executor = (JavascriptExecutor) driver;
             executor.executeScript("arguments[0].click();", checkBox);
 
-        }
+        }*/
 
-        Assert.assertTrue(driver.getCurrentUrl().contains("tip-noutbuka--dlya-biznesa--tonkij-i-lyogkij"));
+        Assert.assertTrue(getNotebooks().getDriver().getCurrentUrl().contains("tip-noutbuka--dlya-biznesa--tonkij-i-lyogkij"));
 
     }
 
     @Test
     public void testFilterBlockHiddenElementsAndVerifyElementProperty(){
-        WebElement sideBar = driver.findElement(By.xpath("//span[@class='sidebar-item']"));
+        /*WebElement sideBar = driver.findElement(By.xpath("//span[@class='sidebar-item']"));
         sideBar.click();
 
         WebElement slider = driver.findElement(By.className("category-slider"));
@@ -127,9 +117,18 @@ public class AvicTests {
         webDriverWait.until(ExpectedConditions.visibilityOf(item));
 
         actions.moveToElement(item)
-                .click().build().perform();
+                .click().build().perform();*/
 
-        List<WebElement> elements = driver.findElements(By.xpath("//div[@class='filter-block']//div[@class='filter-wrapp']"));
+        List<String> filterValues = List.of("est");
+
+        getHomePage().clickSideBar()
+                .goToInnerCategory("noutbuki-i-aksessuaryi")
+                .clickInnerCategoryItem("noutbuki");
+
+        getNotebooks().openClosedFilterBox("Сенсорный экран")
+                .clickFilterBlocks(filterValues);
+
+        /*List<WebElement> elements = driver.findElements(By.xpath("//div[@class='filter-block']//div[@class='filter-wrapp']"));
         for (WebElement element : elements) {
             WebElement clickable = element.findElement(By.tagName("p"));
 
@@ -147,7 +146,7 @@ public class AvicTests {
                     break;
                 }
             }
-        }
+        }*/
 
         List<WebElement> elementList = driver.findElements(By.xpath("//div[@class='prod-cart__img']"));
         elementList.get(2).click();
@@ -162,7 +161,7 @@ public class AvicTests {
 
         Assert.assertTrue(result.isPresent());
     }
-
+/*
     @Test
     public void testAddAndRemoveFromCart(){
         String expected = "0";
@@ -188,10 +187,5 @@ public class AvicTests {
                 By.xpath("//div[@class='header-bottom search_mobile_display']//div[@class='active-cart-item js_cart_count']"));
 
         Assert.assertEquals(headerCart.getText(), expected);
-    }
-
-    @AfterMethod
-    public void shutDown() {
-        driver.close();
-    }
+    }*/
 }
