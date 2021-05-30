@@ -4,76 +4,65 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import pageObject.PageObject;
-import pageObject.ProductPage;
-import pages.products.ProductFactory;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
-public class HomePage extends PageObject {
+public class HomePage extends BasePage {
 
     @FindBy(xpath = "//span[@class='sidebar-item']")
     private WebElement sideBar;
 
     @FindBy(xpath = "//div[@class='menu-lvl first-level']")
-    private WebElement outerCategories;
+    private WebElement sideBarOuterCategories;
 
-    private WebElement innerCategories;
+    private WebElement sideBarInnerCategories;
 
-    private WebElement products;
+    private WebElement sideBarProducts;
+
+    @FindBy(xpath = "//div[@class='category-items flex-wrap']//a[@class='category-box']")
+    private List<WebElement> popularItems;
 
     public HomePage(WebDriver driver) {
         super(driver);
     }
 
-    public HomePage clickSideBar(){
+    public HomePage clickSideBar() {
         sideBar.click();
 
         return this;
     }
 
-    public HomePage goToInnerCategory(String name){
-        innerCategories = getSubCategory(
-                selectCategory(outerCategories, name));
+    public HomePage goToInnerCategory(String name) {
+        sideBarInnerCategories = getSubCategory(
+                selectCategory(sideBarOuterCategories, name));
 
-        waitForElementToLoad(innerCategories, 10);
+        waitForElementToLoad(sideBarInnerCategories, 10);
 
         return this;
     }
 
-   /* public HomePage clickInnerCategoryItem(String name){
-        products = selectCategory(innerCategories, name);
-
-        waitForElementToLoad(products, 10);
-
-        products.click();
-
-        return this;
-    }*/
-
-    public void clickInnerCategoryItem(String name){
-        selectCategory(innerCategories, name).click();
+    public void clickInnerCategoryItem(String name) {
+        selectCategory(sideBarInnerCategories, name).click();
     }
 
-    public HomePage goToProducts(String name){
-        products = getSubCategory(
-                selectCategory(innerCategories, name));
+    public HomePage goToProducts(String name) {
+        sideBarProducts = getSubCategory(
+                selectCategory(sideBarInnerCategories, name));
 
-        waitForElementToLoad(products, 10);
+        waitForElementToLoad(sideBarProducts, 10);
 
         return this;
     }
 
     //TODO return page for sub-category name doesn't match (notebooks - xiaomi)
-    public void clickProductWithFilter(String name){
-        selectCategory(products, name).click();
+    public void clickProductWithFilter(String name) {
+        selectCategory(sideBarProducts, name).click();
 
         //return ProductFactory.getProduct(getDriver(), name);
     }
 
-    public WebElement selectCategory(WebElement source, String name){
-        WebElement element = source.findElement(By.xpath(".//a[contains(@href,'"+name+"')]"));
+    public WebElement selectCategory(WebElement source, String name) {
+        WebElement element = source.findElement(By.xpath(".//a[contains(@href,'" + name + "')]"));
 
         getActions().moveToElement(element)
                 .build().perform();
@@ -81,8 +70,12 @@ public class HomePage extends PageObject {
         return element;
     }
 
-    public WebElement getSubCategory(WebElement element){
+    public WebElement getSubCategory(WebElement element) {
         return element.findElement(
                 By.xpath(".//following-sibling::div[contains(@class,'menu-lvl')]"));
+    }
+
+    public void clickPopularItem(int n) {
+        popularItems.get(n).click();
     }
 }

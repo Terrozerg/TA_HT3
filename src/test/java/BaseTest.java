@@ -7,7 +7,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import pages.HomePage;
-import pages.products.Notebooks;
+import pages.ItemPage;
+import pages.ProductPage;
 
 public class BaseTest {
     private static final String AVIC_URL = "https://avic.ua/";
@@ -41,7 +42,11 @@ public class BaseTest {
         return new HomePage(driver);
     }
 
-    public Notebooks getNotebooks() {
-        return new Notebooks(driver);
+    public ProductPage getProductPage() {
+        return new ProductPage(driver);
+    }
+
+    public ItemPage getItemPage() {
+        return new ItemPage(driver);
     }
 }

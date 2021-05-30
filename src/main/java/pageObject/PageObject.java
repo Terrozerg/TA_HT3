@@ -8,8 +8,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
-
 public abstract class PageObject {
     private WebDriver driver;
     private Actions actions;
@@ -22,6 +20,12 @@ public abstract class PageObject {
 
     public WebElement waitForElementToLoad(WebElement element, int timeOut) {
         new WebDriverWait(driver, timeOut).until(ExpectedConditions.visibilityOf(element));
+
+        return element;
+    }
+
+    public WebElement waitForElementToUnload(WebElement element, int timeOut) {
+        new WebDriverWait(driver, timeOut).until(ExpectedConditions.invisibilityOf(element));
 
         return element;
     }
